@@ -1,0 +1,14 @@
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary Office files
+~$*.xlsx
+~$*.xlsm
+~$*.pbix
+
+# Local extracts / temporary exports
+*.tmp
+*.bak
