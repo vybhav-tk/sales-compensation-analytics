@@ -1,305 +1,843 @@
 # Sales Compensation & Incentive Analytics
 
-A portfolio project demonstrating how a Sales Compensation Analyst can translate a compensation plan into an auditable analytical workflow: from business rules and source data through attainment, incentive calculations, reconciliation, exception analysis, scenario testing, and management reporting.
+> **Portfolio simulation of an end-to-end sales compensation analytics and administration process.**  
+> This project uses **synthetic data** and fictional business rules. It does **not** represent the actual compensation plan, internal data, or operating practices of Staples Canada or any other employer.
 
-> **Synthetic-data / portfolio disclaimer**  
-> This project is an independent analytical case study built with **synthetic data created for portfolio and learning purposes**. It is not an official compensation plan, payroll process, quota methodology, or reporting solution of any organization. The participant records, performance results, targets, compensation rates, thresholds, tiers, and payout outcomes are simulated and do not represent real employees or official company compensation rules.
+---
 
-## Executive Summary
+## Project Status
 
-Sales compensation sits at the intersection of sales performance, finance, payroll, HR, and operations. The core challenge is not simply calculating a commission. The analyst must make sure that incentive payments are **accurate, explainable, reproducible, and aligned with the intent of the compensation plan**.
+**Core analytical build: Complete**
 
-This project builds an end-to-end sales compensation analytics workflow that answers four fundamental questions:
+Completed scope includes:
 
-1. **What performance did each participant achieve?**
-2. **How should the compensation plan translate that performance into incentive earnings?**
-3. **Can the payout be validated and explained before payment?**
-4. **What can management learn from the resulting performance and payout patterns?**
+- quota allocation and effective quota calculations
+- transaction-level sales crediting
+- quota attainment
+- marginal commission calculations
+- accelerator economics
+- Q3 Technology Services SPIFF
+- exception controls and payroll reconciliation
+- quota coverage vs. Finance plan
+- commission expense forecasting
+- compensation-plan effectiveness analysis
+- consolidated Excel portfolio model
+- Power BI semantic-model design
+- management insights and recommendations
 
-The project uses Excel, SQL, structured QA controls, scenario analysis, and management-oriented reporting. A Power BI dashboard is the remaining visualization layer and will be added later.
+Power BI visualization screenshots can be added to the repository once the report is built in Power BI Desktop.
 
-## Business Problem
+---
 
-A sales organization may have hundreds or thousands of transactions, multiple performance measures, individual targets, eligibility rules, tiers, accelerators, caps, and exception conditions. Raw sales results alone do not determine what an employee should be paid.
+# Executive Summary
 
-A Sales Compensation Analyst therefore needs a controlled process that can:
+Sales compensation sits at the intersection of **Sales, Finance, Payroll, HR/Total Rewards, Sales Operations, and Analytics**.
 
-- connect sales results to the correct participant and performance period;
-- apply the correct quota or target;
-- calculate attainment consistently;
-- translate attainment into incentive earnings using the compensation-plan rules;
-- detect missing, duplicated, inconsistent, or unusual records;
-- reconcile calculated earnings before payroll or finance consumption;
-- explain payout differences to stakeholders;
-- quantify the financial effect of alternative plan assumptions;
-- provide management with clear performance and cost insights.
+The central challenge is not simply calculating a commission percentage. A compensation process must reliably translate:
 
-Without these controls, organizations face risks such as overpayment, underpayment, employee disputes, poor plan credibility, budgeting surprises, and weak auditability.
+**sales transactions → credited performance → quota attainment → incentive rules → employee payout → payroll approval → financial reporting**
 
-## Solution
+while also answering questions such as:
 
-The project addresses the problem through a controlled analytical pipeline:
+- How much should each salesperson be paid?
+- Can every dollar of the payout be explained?
+- Are sales credits and quotas valid?
+- How much will the compensation plan cost under different performance scenarios?
+- Does the incentive structure meaningfully differentiate performance?
+- Is quota capacity sufficient to support the financial plan?
+- Are SPIFFs and accelerators creating financially manageable incentive costs?
 
-**Source data → validation → plan-rule mapping → target attainment → payout calculation → QA/reconciliation → exception analysis → scenario analysis → management reporting → Power BI**
+This project models that process for a fictional Canadian B2B sales organization and creates a simplified compensation administration and analytics system.
 
-The solution is designed around three principles:
+---
 
-- **Accuracy:** calculations should match the documented plan rules.
-- **Auditability:** every payout should be traceable back to source data, target, rule, and calculation.
-- **Decision usefulness:** outputs should help management understand both sales performance and compensation cost.
+# Business Problem
 
-## Project Phases
+A Sales Compensation team needs to convert raw commercial activity into accurate and auditable incentive payments.
 
-| Phase | Focus | Why it matters | Main outcome |
-|---|---|---|---|
-| 1 | Business understanding | Prevents technically correct analysis from solving the wrong problem | Defined stakeholders, business questions, risks, and success criteria |
-| 2 | Compensation-plan and data architecture | Converts plan language into measurable fields and rules | Defined inputs, relationships, data grain, measures, and rule dependencies |
-| 3 | Data preparation and validation | Bad source data creates bad payouts | Clean analytical dataset with validation controls and exception flags |
-| 4 | Attainment and incentive logic | Performance must be converted consistently into earnings | Reproducible target, attainment, tier, accelerator, and payout calculations |
-| 5 | Reconciliation and QA | Compensation requires payroll-grade control | Validation checks, payout tie-outs, reasonableness tests, and exception review |
-| 6 | Performance and payout analysis | Payouts should be explainable, not just calculated | Distribution, variance, productivity, and cost insights |
-| 7 | Scenario and sensitivity analysis | Management needs to understand plan-cost and behavior tradeoffs | What-if analysis of targets, thresholds, rates, caps, and performance changes |
-| 8 | Management reporting and recommendations | Analysis must support action | Executive summary, findings, risks, recommendations, and interview-ready narrative |
-| 9 | Power BI dashboard | Interactive visualization improves ongoing monitoring | **Pending** — dashboard model, visuals, and screenshots will be added later |
+That requires solving three connected business problems.
 
-Detailed documentation is available in [`docs/project-phases.md`](docs/project-phases.md).
+## 1. Compensation Administration
 
-## Analytical Workflow
+> **How much should each salesperson be paid?**
 
-### 1. Establish the business and plan context
+The process must combine:
 
-The first step is to identify who uses the output and what decisions depend on it. Typical stakeholders include Sales Leadership, Finance, Payroll, HR, Compensation, and Sales Operations.
+- approved quota
+- eligible credited sales
+- quota attainment
+- marginal commission tiers
+- accelerators
+- SPIFFs
+- adjustments
+- employee and plan eligibility
 
-The analytical process distinguishes between three different concepts:
+## 2. Financial Control
 
-- **Performance:** what the participant sold or achieved.
-- **Attainment:** performance relative to the assigned target.
-- **Payout:** the incentive amount produced by the compensation formula.
+> **Can the payment be trusted?**
 
-Keeping these concepts separate is essential because a participant can have strong raw sales but low attainment if the quota is higher, or strong attainment but a different payout because of plan weighting, thresholds, tiers, accelerators, caps, or eligibility rules.
+The compensation process must detect issues such as:
 
-### 2. Build the analytical data model
+- duplicate transactions
+- invalid employees
+- transactions after termination
+- missing quota
+- missing compensation-plan assignments
+- unknown product categories
+- unusual negative transactions
+- extreme attainment
+- unreconciled payroll amounts
 
-The project treats compensation analysis as a small relational model rather than a single flat calculation sheet. Typical logical datasets include:
+## 3. Management Analytics
 
-- participant / employee master;
-- performance or transaction data;
-- quota / target data;
-- compensation-plan parameters;
-- eligibility or assignment data;
-- calculated payout output;
-- exception / validation output.
+> **What do compensation results tell management?**
 
-The most important design decision is **grain**. Each dataset must have a clearly defined row-level meaning, such as one row per participant per month, one row per transaction, or one row per plan measure per participant-period.
+Management needs visibility into:
 
-See [`docs/data-model.md`](docs/data-model.md) and [`docs/calculation-logic.md`](docs/calculation-logic.md).
+- quota attainment distribution
+- compensation expense
+- accelerator cost
+- quota coverage
+- payout concentration
+- SPIFF economics
+- commission forecasting
+- incentive effectiveness
 
-### 3. Prepare and validate data
+---
 
-Before calculating compensation, the project checks for conditions such as:
+# Fictional Business Scenario
 
-- missing participant IDs;
-- missing targets;
-- duplicate transactions or participant-period rows;
-- invalid or inconsistent dates;
-- non-eligible participants;
-- unmatched plan assignments;
-- negative or unusual values;
-- inconsistent source totals;
-- records outside the compensation period.
+The project models a fictional company called:
 
-The goal is to isolate data-quality problems before they become payout problems.
+## Northstar Workplace Solutions Canada
 
-### 4. Calculate attainment and incentive earnings
+A Canadian B2B organization selling:
 
-The core analytical flow is:
+- office and workplace products
+- technology hardware
+- furniture
+- Technology Services
+- related business solutions
 
-**Eligible performance ÷ target = attainment → plan tier / rate → calculated incentive payout**
+The modeled quota-carrying sales organization contains:
 
-Depending on plan design, the model can also support:
+| Metric | Value |
+|---|---:|
+| Sales Representatives | 48 |
+| Sales Managers | 8 |
+| Regions | 4 |
+| Finance Annual Sales Plan | $60.0M |
+| Gross Approved Quota Book | $63.0M |
+| Gross Quota Coverage | 105% |
 
-- multiple weighted measures;
-- minimum thresholds;
-- target payouts;
-- tiered commission rates;
-- accelerators above target;
-- decelerators below target;
-- caps or maximum payouts;
-- guarantees or draws;
-- period-level adjustments;
-- exception overrides with documented reasons.
+Sales roles include:
 
-The calculations are intentionally separated into intermediate steps so that the final payout can be audited.
+- Account Executive I
+- Account Executive II
+- Senior Account Executive
 
-### 5. Reconcile and quality-check the output
+Individual quotas vary by territory while maintaining the approved organization-level quota book.
 
-A compensation calculation is not considered complete when the formula returns a number. The output must be validated.
+---
 
-The QA process includes:
+# Compensation Plan Design
 
-- source-to-model total reconciliation;
-- participant count reconciliation;
-- target and plan assignment completeness;
-- duplicate and missing-key checks;
-- reasonableness testing for extreme payouts;
-- payout distribution review;
-- zero-payout and maximum-payout review;
-- manual spot checks;
-- comparison of independently calculated control totals where possible.
+The fictional commission plan uses **marginal commission tiers**.
 
-See [`docs/qa-and-controls.md`](docs/qa-and-controls.md).
+| Quota Attainment | Commission Rate | Component |
+|---|---:|---|
+| 0%–80% | 1.0% | Base Commission |
+| 80%–100% | 2.0% | Base Commission |
+| 100%–110% | 3.5% | Accelerator |
+| >110% | 5.0% | Accelerator |
 
-### 6. Analyze performance and compensation outcomes
+The plan is **uncapped**.
 
-Once payouts are validated, the output becomes a management dataset. The analysis can answer questions such as:
+Attainment above **175%** is not capped, but it is automatically flagged for review.
 
-- What percentage of participants achieved target?
-- How is attainment distributed across the population?
-- Which participants or teams are materially above or below plan?
-- What is the relationship between performance and payout?
-- Where are compensation costs concentrated?
-- Are there unusual payout-to-sales relationships?
-- Which records require operational investigation?
+## Why Marginal Tiers?
 
-This turns the project from a calculation exercise into a compensation analytics solution.
+Only the sales dollars inside each attainment band receive that band's commission rate.
 
-### 7. Perform scenario analysis
+For a rep with a **$100,000 quota** and **120% attainment**:
 
-Scenario analysis evaluates how compensation cost or participant outcomes may change if assumptions change. Examples include:
+- first $80,000 × 1% = $800
+- next $20,000 × 2% = $400
+- next $10,000 × 3.5% = $350
+- final $10,000 × 5% = $500
 
-- increasing or decreasing targets;
-- moving an accelerator threshold;
-- changing a commission rate;
-- applying a payout cap;
-- changing the mix of weighted measures;
-- simulating stronger or weaker sales performance.
+Total commission:
 
-The objective is not to recommend arbitrary plan changes. It is to show management the measurable tradeoff between **motivation, attainability, differentiation, and compensation cost**.
+**$2,050**
 
-### 8. Communicate the result
-
-The final output is designed to support both technical and business audiences. The project therefore documents:
-
-- the business problem;
-- the compensation logic;
-- the data model;
-- the calculation sequence;
-- the QA framework;
-- analytical findings;
-- scenario results;
-- limitations and assumptions;
-- recommendations and next steps.
-
-An interview-oriented explanation is included in [`docs/interview-walkthrough.md`](docs/interview-walkthrough.md).
-
-## Synthetic Dataset
-
-All project data is synthetic. The dataset was designed to resemble the types of inputs a Sales Compensation Analyst may work with—participant attributes, sales/performance, quotas, plan parameters, eligibility, calculated payout, and QA exceptions—without using real employee, payroll, or confidential company information.
-
-The final source files will be stored in [`data/`](data/) so that the Excel, SQL, and Power BI workflow can be reproduced from the same public portfolio dataset.
-
-## Tools and Skills Demonstrated
-
-- **Excel:** structured calculations, lookups, reconciliation, exception flags, scenario analysis, summary reporting
-- **SQL:** joins, aggregations, validation queries, participant-period calculations, exception detection
-- **Power BI:** data model and dashboard visualization — **pending**
-- **Data modeling:** fact/dimension thinking, grain definition, key relationships
-- **Sales compensation:** quota attainment, incentive calculation, tiers, accelerators, caps, eligibility, payout validation
-- **Analytics:** variance analysis, distribution analysis, exception analysis, sensitivity testing
-- **Business communication:** management summaries, audit explanations, recommendations, stakeholder-oriented storytelling
-
-## Power BI — Pending
-
-The Power BI layer will be added after the calculation and QA workflow is finalized. Planned dashboard sections include:
-
-- Executive Overview
-- Attainment Distribution
-- Payout Distribution
-- Participant / Team Performance
-- Compensation Cost Analysis
-- Exceptions and QA
-- Scenario Comparison
-
-### Dashboard Image Placeholder — Executive Overview
-
-> **Power BI screenshot will be added here.**
-
-<!-- When ready, replace the placeholder above with:
-![Power BI Executive Overview](assets/power-bi/executive-overview.png)
--->
-
-### Dashboard Image Placeholder — Attainment & Payout Analysis
-
-> **Power BI screenshot will be added here.**
-
-<!-- When ready, replace the placeholder above with:
-![Power BI Attainment and Payout Analysis](assets/power-bi/attainment-payout.png)
--->
-
-### Dashboard Image Placeholder — QA / Exceptions
-
-> **Power BI screenshot will be added here.**
-
-<!-- When ready, replace the placeholder above with:
-![Power BI QA and Exceptions](assets/power-bi/qa-exceptions.png)
--->
-
-See [`powerbi/README.md`](powerbi/README.md) for the planned dashboard structure.
-
-## Repository Structure
-
-```text
-sales-compensation-analysis/
-│
-├── README.md
-├── PROJECT_STATUS.md
-├── .gitignore
-│
-├── docs/
-│   ├── business-problem.md
-│   ├── project-phases.md
-│   ├── data-model.md
-│   ├── calculation-framework.md
-│   ├── qa-and-controls.md
-│   ├── scenario-analysis.md
-│   └── interview-walkthrough.md
-│
-├── data/
-│   └── README.md
-│
-├── excel/
-│   └── README.md
-│
-├── sql/
-│   ├── README.md
-│   └── example-analysis-queries.sql
-│
-├── powerbi/
-│   └── README.md
-│
-└── assets/
-    └── power-bi/
-        └── .gitkeep
+The 5% rate is **not** applied retroactively to all sales.
+
+---
+
+# Q3 Technology Services SPIFF
+
+The model also includes a temporary Technology Services incentive.
+
+### SPIFF Period
+
+**July 1 – September 30**
+
+### Target
+
+Each eligible rep receives a Technology Services target equal to:
+
+**12% × Effective Q3 Sales Quota**
+
+### Award Tiers
+
+| TSVC Target Attainment | Award |
+|---|---:|
+| <80% | $0 |
+| 80%–99.99% | $250 |
+| 100%–119.99% | $600 |
+| 120%+ | $1,000 |
+
+The highest achieved tier is paid.
+
+The SPIFF is modeled separately from core commission so its cost and effectiveness can be analyzed independently.
+
+---
+
+# End-to-End Compensation Process
+
+```mermaid
+flowchart LR
+    A[Finance Sales Plan] --> B[Quota Allocation]
+    B --> C[Effective Quota]
+    D[Sales Transactions] --> E[Sales Crediting]
+    E --> F[Eligible Credited Sales]
+    C --> G[Quota Attainment]
+    F --> G
+    G --> H[Marginal Commission]
+    H --> I[Accelerators]
+    F --> J[SPIFF Evaluation]
+    I --> K[Working Compensation]
+    J --> K
+    K --> L[Exception Controls]
+    L --> M[Review & Approval]
+    M --> N[Payroll]
+    K --> O[Finance Forecasting]
+    K --> P[Management Analytics]
 ```
 
-## What the Project Demonstrates
+---
 
-The most important capability demonstrated by this project is the ability to move beyond dashboarding and treat compensation as a controlled business process.
+# Data Model
 
-The project shows how an analyst can:
+The project separates raw source activity, business rules, calculated results, and controls.
 
-1. interpret a business rule;
-2. translate it into structured data and calculation logic;
-3. validate the result independently;
-4. identify exceptions before downstream use;
-5. explain why a participant received a particular result;
-6. assess the cost and behavioral implications of plan assumptions;
-7. communicate the output to management.
+```mermaid
+flowchart TD
+    EMP[Employee Master]
+    QUOTA[Quota Assignment]
+    PLAN[Compensation Plan]
+    SALES[Sales Transactions]
+    CREDIT[Sales Credit Detail]
+    PERF[Monthly Performance]
+    TIER[Commission Tier Detail]
+    SPIFF[SPIFF Awards]
+    EXC[Exceptions]
+    PAY[Compensation Payout]
 
-That combination of analytical rigor, business understanding, and stakeholder communication is central to Sales Compensation Analytics.
+    EMP --> QUOTA
+    EMP --> SALES
+    EMP --> PERF
+    PLAN --> TIER
+    SALES --> CREDIT
+    CREDIT --> PERF
+    QUOTA --> PERF
+    PERF --> TIER
+    PERF --> SPIFF
+    TIER --> PAY
+    SPIFF --> PAY
+    EXC --> PAY
+```
 
-## Current Status
+A key modeling principle is **grain discipline**.
 
-The core project documentation and analytical workflow are complete. The Power BI visualization layer is still in progress.
+Examples:
 
-See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for the implementation checklist.
+- one sales transaction per row
+- one employee × month performance record
+- one employee × month × commission tier record
+- one exception per issue
+- one compensation component per payout record
+
+Mixing these grains would make reconciliation and auditability difficult.
+
+---
+
+# Sales Crediting
+
+Raw revenue is not automatically commissionable revenue.
+
+| Transaction Condition | Treatment |
+|---|---|
+| Valid invoiced commissionable sale | Eligible |
+| Valid processed return | Eligible negative credit |
+| Shipping / delivery | Excluded |
+| Sales tax | Excluded |
+| Cancelled transaction | Excluded |
+| Duplicate Transaction ID | HOLD |
+| Invalid Employee ID | HOLD |
+| Transaction after termination | HOLD |
+| Unknown product category | HOLD |
+| Negative revenue classified as Sale | Review |
+| Outside compensation period | Review |
+
+The model preserves the original transaction and records how Sales Compensation treated it rather than deleting or silently changing suspicious records.
+
+---
+
+# Effective Quota
+
+Annual quota alone is not always the correct employee performance denominator.
+
+**Nominal Monthly Quota = Annual Quota × Monthly Seasonality**
+
+Then:
+
+**Effective Monthly Quota = Nominal Monthly Quota × Active-Day Factor × Ramp Factor**
+
+New-hire ramp rules:
+
+| Period | Ramp Factor |
+|---|---:|
+| Hire month | 50% |
+| Second month | 75% |
+| Third month onward | 100% |
+
+The hire month can also be prorated for active days.
+
+---
+
+# Quota Attainment
+
+**Quota Attainment = Eligible Credited Sales ÷ Effective Monthly Quota**
+
+The model separates performance from processing status.
+
+Performance examples:
+
+- Below 80%
+- 80%–99.99%
+- 100%–109.99%
+- 110%–174.99%
+- 175%+ Review
+
+Processing examples:
+
+- Ready for Commission Calculation
+- HOLD — Quota
+- HOLD — Sales Credit
+- Review — Sales Credit
+- Review — High Attainment
+- Not Applicable
+
+---
+
+# Commission Traceability
+
+The model stores commission at the **tier level** so every payout can be reconstructed.
+
+## Example — Maya Chen, August 2026
+
+| Metric | Value |
+|---|---:|
+| Effective Quota | $85,400 |
+| Eligible Sales | $100,772 |
+| Attainment | 118% |
+
+| Tier | Sales in Tier | Rate | Commission |
+|---|---:|---:|---:|
+| 0%–80% | $68,320 | 1.0% | $683.20 |
+| 80%–100% | $17,080 | 2.0% | $341.60 |
+| 100%–110% | $8,540 | 3.5% | $298.90 |
+| >110% | $6,832 | 5.0% | $341.60 |
+
+Base commission:
+
+**$1,024.80**
+
+Accelerator commission:
+
+**$640.50**
+
+Total working commission:
+
+**$1,665.30**
+
+---
+
+# Compensation Controls
+
+A mathematically correct result is not automatically payroll-ready.
+
+The model identifies exceptions such as:
+
+- missing quota
+- missing compensation-plan assignment
+- duplicate transactions
+- invalid employee IDs
+- post-termination sales
+- unknown product categories
+- negative sales requiring review
+- extreme quota attainment
+
+The modeled approval lifecycle is:
+
+**Calculated → Exception / Hold → Reviewed → Approved → Sent to Payroll**
+
+Approval is treated as a human governance decision rather than something the formula automatically decides.
+
+---
+
+# Important Control Example
+
+One employee's January commission was mathematically calculated correctly.
+
+However, the employee's compensation-plan assignment did not begin until February.
+
+The downstream control layer therefore changed the January result to:
+
+**HOLD — Missing Plan**
+
+This demonstrates:
+
+> **A correct formula can still produce an administratively invalid payment if eligibility and effective dating are not controlled.**
+
+---
+
+# Payroll Reconciliation
+
+The compensation process reconciles:
+
+**Working Compensation = Approved Amount + Held / Review Amount**
+
+The modeled payroll reconciliation difference is:
+
+**$0**
+
+Held amounts remain visible rather than disappearing from reporting.
+
+---
+
+# Quota Coverage vs Finance Plan
+
+The organization begins with:
+
+- Finance plan: **$60.0M**
+- Gross quota book: **$63.0M**
+- Gross coverage: **105%**
+
+After quota effective dating:
+
+**Nominal quota in force ≈ $58.92M**
+
+After new-hire ramping and active-day proration:
+
+**Effective operational quota ≈ $58.39M**
+
+Effective quota coverage becomes:
+
+**≈97.3%**
+
+---
+
+# Commission Expense Forecasting
+
+| Scenario | Attainment | Forecast Sales | Forecast Commission |
+|---|---:|---:|---:|
+| Downside | 90% | ~$52.55M | ~$583.9K |
+| Plan | 100% | ~$58.39M | ~$700.7K |
+| Upside | 110% | ~$64.23M | ~$905.1K |
+| High Upside | 120% | ~$70.07M | ~$1.197M |
+
+A key Finance insight is that compensation expense is **nonlinear**.
+
+From 100% to 110% attainment:
+
+- sales increase ≈ **10%**
+- commission expense increases ≈ **29%**
+
+From 100% to 120%:
+
+- sales increase ≈ **20%**
+- commission expense increases ≈ **71%**
+
+---
+
+# Accelerator Economics
+
+Total working core commission:
+
+**≈$865K**
+
+Incremental accelerator premium versus continuing a 2% rate above quota:
+
+**≈$115K**
+
+This separates total commission on above-quota sales from the **incremental cost created by the accelerator rates themselves**.
+
+---
+
+# SPIFF Economics
+
+| Metric | Result |
+|---|---:|
+| SPIFF-Eligible Reps | 46 |
+| Award Recipients | 25 |
+| Award Rate | ~54% |
+| Eligible TSVC Sales | ~$1.70M |
+| SPIFF Cost | $18,500 |
+| SPIFF Cost / TSVC Sales | ~1.09% |
+
+The analysis describes observed economics and does **not** claim that the SPIFF caused the sales.
+
+---
+
+# Key Business Insights
+
+## 1. The Gross Quota Buffer Was Fully Consumed
+
+The organization started with 105% gross quota coverage but ended with approximately 97.3% effective operational coverage.
+
+**Management implication:** track effective quota capacity monthly rather than relying only on the annual gross quota book.
+
+## 2. Rep Overperformance Offset the Capacity Gap
+
+Eligible credited sales reached approximately **$60.79M**, slightly above the modeled **$60M Finance plan**, despite effective quota capacity being below plan.
+
+**Management implication:** strong performance is positive, but sustained overachievement should not be treated as a substitute for restoring quota capacity.
+
+## 3. Coverage Risk Is Uneven by Region
+
+The model shows materially different effective coverage levels by region.
+
+**Management implication:** investigate staffing, vacancies, termination timing, ramping, and quota effective dates before interpreting low coverage as poor sales execution.
+
+## 4. Finance Should Forecast Using the Actual Payout Curve
+
+Accelerators create nonlinear compensation expense.
+
+**Management implication:** forecast compensation using attainment scenarios or attainment distributions rather than one historical average commission rate.
+
+## 5. Accelerators Are a Meaningful Cost of Overperformance
+
+The incremental accelerator premium is approximately **$115K**.
+
+**Management implication:** evaluate accelerator expense against incremental contribution margin and strategic value.
+
+## 6. The SPIFF Has Bounded Cost
+
+The Q3 SPIFF costs approximately **1.09% of targeted Technology Services sales**.
+
+**Management implication:** combine future SPIFF analysis with product margin and stronger pre/post or comparison-group analysis.
+
+## 7. Compensation Controls Have Financial Impact
+
+The model detects **13 exceptions** and approximately **$19K of compensation remains blocked or under review** in the simulated approval process.
+
+**Management implication:** monitor exception aging and recurring root causes to reduce payout delays and manual investigation.
+
+## 8. The Plan Shows Strong Pay-for-Performance Differentiation
+
+Higher quota attainment produces systematically richer payout economics.
+
+**Management implication:** preserve differentiation while also monitoring quota and territory fairness.
+
+---
+
+# Excel Portfolio Model
+
+The consolidated Excel model is organized as an interview walkthrough:
+
+```text
+00_Dashboard
+01_Model_Guide
+02_Rules
+03_Quota_Coverage
+04_Sales_Credit
+05_Perf_Comm
+06_SPIFF
+07_Controls
+08_Forecast
+09_Effectiveness
+10_Traceability
+11_Business_Insights
+12_Management_Actions
+```
+
+---
+
+# Power BI Design
+
+The project also includes a Power BI-ready semantic model.
+
+### Dimensions
+
+- Dim Employee
+- Dim Date
+- Dim Product Category
+- Dim Scenario
+
+### Fact Tables
+
+- Fact Sales Credit
+- Fact Monthly Performance
+- Fact SPIFF
+- Fact Exceptions
+- Fact Payroll
+- Fact Forecast Monthly
+
+The report is designed around four pages.
+
+## Page 1 — Executive Overview
+
+- Eligible Credited Sales
+- Effective Quota
+- Weighted Attainment
+- Working Commission
+- Approved Compensation
+- Effective Coverage
+- Open Exceptions
+- monthly sales vs quota
+- attainment distribution
+- working vs approved compensation
+
+## Page 2 — Performance & Compensation
+
+- attainment vs commission scatterplot
+- employee performance matrix
+- base vs accelerator commission
+- attainment distribution
+- rep-level drillthrough
+
+## Page 3 — Controls & Payroll
+
+- critical exceptions
+- review exceptions
+- blocked compensation
+- approval rate
+- exceptions by type
+- payroll reconciliation
+- operational exception register
+
+## Page 4 — Finance & Incentives
+
+- quota coverage by region
+- 90% / 100% / 110% / 120% forecast scenarios
+- accelerator premium
+- forecast commission rate
+- SPIFF economics
+
+---
+
+# Screenshot Placeholders
+
+### Excel Dashboard
+
+```text
+[Insert Excel dashboard screenshot here]
+```
+
+### Power BI Executive Overview
+
+```text
+[Insert Power BI Executive Overview screenshot here]
+```
+
+### Power BI Performance & Compensation
+
+```text
+[Insert Power BI Performance & Compensation screenshot here]
+```
+
+### Power BI Controls & Payroll
+
+```text
+[Insert Power BI Controls & Payroll screenshot here]
+```
+
+### Power BI Finance & Incentives
+
+```text
+[Insert Power BI Finance & Incentives screenshot here]
+```
+
+---
+
+# Technology Stack
+
+### Excel
+
+Used for:
+
+- business-rule modeling
+- quota calculations
+- transaction validation
+- commission calculations
+- reconciliation
+- forecasting
+- management analysis
+
+### Power BI
+
+Designed for:
+
+- executive reporting
+- employee performance analysis
+- incentive economics
+- exception monitoring
+- Finance forecasting
+
+### SQL / Data Modeling Concepts
+
+The project applies:
+
+- dimension/fact separation
+- table grain
+- effective dating
+- keys and relationships
+- audit-detail preservation
+- star-schema reporting design
+
+### GitHub
+
+Used to document:
+
+- business problem
+- methodology
+- project architecture
+- analytical decisions
+- assumptions
+- limitations
+- portfolio outputs
+
+---
+
+# Suggested Repository Structure
+
+```text
+sales-compensation-analytics/
+│
+├── README.md
+│
+├── data/
+│   └── synthetic/
+│       └── README.md
+│
+├── excel/
+│   ├── Sales_Compensation_Portfolio_Model.xlsx
+│   └── supporting_phase_models/
+│
+├── powerbi/
+│   ├── Sales_Compensation_PowerBI_Data_Model.xlsx
+│   └── screenshots/
+│
+├── docs/
+│   ├── business_rules.md
+│   ├── data_model.md
+│   └── methodology.md
+│
+└── images/
+    ├── excel_dashboard.png
+    ├── powerbi_executive_overview.png
+    ├── powerbi_controls.png
+    └── powerbi_forecast.png
+```
+
+---
+
+# How to Explore the Project
+
+1. Read the **Business Problem** and **Executive Summary**.
+2. Review the compensation plan and sales-credit rules.
+3. Open the consolidated Excel workbook.
+4. Start on the executive dashboard.
+5. Follow quota → sales credit → performance → commission → controls.
+6. Review forecasting and management insights.
+7. Open the Power BI report or screenshots for the visualization layer.
+
+---
+
+# Key Analytical Principles Demonstrated
+
+### Grain
+
+Every table has a clearly defined row-level meaning.
+
+### Traceability
+
+Calculated outputs can be traced back to source transactions and rules.
+
+### Effective Dating
+
+Employee, quota, hierarchy, and plan assignments can change over time.
+
+### Reconciliation
+
+Calculated compensation is reconciled to approved and payroll-ready amounts.
+
+### Separation of Calculation and Approval
+
+A mathematically correct number is not automatically an authorized payment.
+
+### Scenario Analysis
+
+Plan rules are translated into forward-looking financial forecasts.
+
+### Descriptive vs Causal Analysis
+
+Observed incentive economics are analyzed without claiming that an incentive caused the observed performance.
+
+---
+
+# Project Limitations
+
+This project intentionally simplifies real-world compensation administration.
+
+Not modeled in detail:
+
+- split sales credit
+- multi-currency compensation
+- annual true-ups
+- draws
+- complex clawbacks
+- multi-measure incentive plans
+- payroll tax
+- complex territory changes
+- customer-level profitability
+- contribution margin
+- quota difficulty / territory potential
+- causal incentive-effectiveness experiments
+
+The dataset is synthetic.
+
+Therefore the project should be presented as:
+
+> **a portfolio simulation demonstrating compensation analytics, controls, business reasoning, Excel modeling, and Power BI design**
+
+rather than as professional compensation-administration experience.
+
+---
+
+# Interview Explanation
+
+> “I wanted to understand sales compensation beyond simply calculating commission percentages, so I built a portfolio simulation of the monthly compensation process. I modeled employee and quota assignments, transaction-level sales performance, sales-credit rules, quota attainment, marginal commissions and accelerators, a short-term SPIFF, exception controls, quota rollups against a Finance plan, compensation-expense forecasting, and plan-effectiveness analysis. I also designed a Power BI reporting model for executive, performance, control, and Finance views. The project is not professional sales-compensation administration experience, but it helped me understand how sales results and plan rules translate into auditable employee payouts and financial reporting.”
+
+---
+
+# Disclaimer
+
+This repository is an independent portfolio project.
+
+- All business entities are fictional.
+- All employee names and transactions are synthetic.
+- Compensation rules were created solely for the project.
+- The project does not disclose or represent any employer's confidential compensation plans, sales data, quota methodology, or internal systems.

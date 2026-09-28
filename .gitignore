@@ -12,3 +12,27 @@ Thumbs.db
 # Local extracts / temporary exports
 *.tmp
 *.bak
+
+# Power BI temporary / autosave files
+*.pbix.autosave
+*.pbit.autosave
+
+# Local working folders
+working/
+scratch/
+temp/
+
+# Intermediate project workbooks
+*Phase5A*
+*Phase5B*
+*Phase5C*
+*Phase6_*
+*Phase7_*
+*Phase8_*
+*Phase9_*
+*Phase10_*
+*Phase11_*
+*Phase12_*
+*Phase13_*
+*Phase14_*
+*Phase15_*
