@@ -4,7 +4,7 @@ This folder contains the primary Excel deliverable for the **Sales Compensation 
 
 ## Main File
 
-`Sales_Compensation_Portfolio_Model.xlsx`
+`sales_compensation_portfolio_model.xlsx`
 
 The workbook consolidates the end-to-end compensation process into one interview- and portfolio-ready model.
 
