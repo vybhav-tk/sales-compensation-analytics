@@ -6,6 +6,6 @@ Recommended repository images:
 - `commission_traceability.png`
 - `business_insights.png`
 
-`business_insights.png` is included in this bundle.
+`business_insights.png` is included in the repository.
 
 Add the other screenshots from the final Excel model when convenient, then reference them from the root README.
