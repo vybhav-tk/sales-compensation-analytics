@@ -766,8 +766,7 @@ sales-compensation-analytics/
 4. Start on the executive dashboard.
 5. Follow quota → sales credit → performance → commission → controls.
 6. Review forecasting and management insights.
-7. Open the Power BI report or screenshots for the visualization layer.
-
+7. Review the Power BI semantic model and report blueprint. A native .pbix report and screenshots can be added as a future visualization layer.
 ---
 
 # Key Analytical Principles Demonstrated
