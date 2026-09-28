@@ -753,7 +753,8 @@ sales-compensation-analytics/
 │
 └── images/
     ├── README.md
-    └── business_insights.png```
+    └── business_insights.png
+```
 
 ---
 
