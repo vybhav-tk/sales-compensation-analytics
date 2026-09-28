@@ -727,30 +727,33 @@ Used to document:
 sales-compensation-analytics/
 │
 ├── README.md
+├── .gitignore
 │
 ├── data/
+│   ├── README.md
 │   └── synthetic/
-│       └── README.md
+│       └── sales_compensation_synthetic_data.xlsx
 │
 ├── excel/
-│   ├── Sales_Compensation_Portfolio_Model.xlsx
-│   └── supporting_phase_models/
+│   ├── README.md
+│   └── sales_compensation_portfolio_model.xlsx
 │
 ├── powerbi/
-│   ├── Sales_Compensation_PowerBI_Data_Model.xlsx
+│   ├── README.md
+│   ├── sales_compensation_powerbi_data_model.xlsx
 │   └── screenshots/
+│       └── README.md
 │
 ├── docs/
 │   ├── business_rules.md
-│   ├── data_model.md
-│   └── methodology.md
+│   ├── data_dictionary.md
+│   ├── methodology.md
+│   ├── key_insights.md
+│   └── interview-walkthrough.md
 │
 └── images/
-    ├── excel_dashboard.png
-    ├── powerbi_executive_overview.png
-    ├── powerbi_controls.png
-    └── powerbi_forecast.png
-```
+    ├── README.md
+    └── business_insights.png```
 
 ---
 
