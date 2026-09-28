@@ -696,7 +696,7 @@ Designed for:
 - exception monitoring
 - Finance forecasting
 
-### SQL / Data Modeling Concepts
+### Data Modeling Concepts
 
 The project applies:
 
