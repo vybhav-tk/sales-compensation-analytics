@@ -1,7 +1,7 @@
 # Sales Compensation & Incentive Analytics
 
 > **Portfolio simulation of an end-to-end sales compensation analytics and administration process.**  
-> This project uses **synthetic data** and fictional business rules. It does **not** represent the actual compensation plan, internal data, or operating practices of Staples Canada or any other employer.
+> This project uses **synthetic data** and fictional business rules. It does **not** represent the actual compensation plan, internal data, or operating practices of any employer.
 
 ---
 
